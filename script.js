@@ -5,6 +5,7 @@ let xCount = 0
 let yCount = 300
 let block
 let blocks = []
+let prevDirection
 
 
 function makeSnake() {
@@ -17,7 +18,7 @@ function makeSnake() {
 }
 
 
-function stepUp () {
+function stepUp() {
     if (snake.style.top == '0px') {
         yCount = 680
         snake.style.top = '680px'
@@ -25,8 +26,15 @@ function stepUp () {
     yCount -= 20
     snake.style.top = yCount.toString() + 'px'
 }
-
-function stepRight () {
+function blockStepUp() {
+    if (block.style.top == '0px') {
+        yCount = 680
+        block.style.top = '680px'
+    }
+    yCount -= 20
+    block.style.top = yCount.toString() + 'px'
+}
+function stepRight() {
     if (snake.style.left == '680px') {
         xCount = 0
         snake.style.left = '0px'
@@ -34,8 +42,15 @@ function stepRight () {
     xCount += 20
     snake.style.left = xCount.toString() + 'px'
 }
-
-function stepDown () {
+function blockStepRight() {
+    if (block.style.left == '680px') {
+        xCount = 0
+        block.style.left = '0px'
+    }
+    xCount += 20
+    block.style.left = xCount.toString() + 'px'
+}
+function stepDown() {
     if (snake.style.top == '680px') {
         yCount = 0
         snake.style.top = '0px'
@@ -43,7 +58,14 @@ function stepDown () {
     yCount += 20
     snake.style.top = yCount.toString() + 'px'
 }
-
+function blockStepDown() {
+    if (block.style.top == '680px') {
+        yCount = 0
+        block.style.top = '0px'
+    }
+    yCount += 20
+    block.style.top = yCount.toString() + 'px'
+}
 function stepLeft() {
     if (snake.style.left == '0px') {
         xCount = 680
@@ -51,6 +73,14 @@ function stepLeft() {
     }
     xCount -= 20
     snake.style.left = xCount.toString() + 'px'
+}
+function blockStepLeft() {
+    if (block.style.left == '0px') {
+        xCount = 680
+        block.style.left = '680px'
+    }
+    xCount -= 20
+    block.style.left = xCount.toString() + 'px'
 }
 
 
@@ -68,12 +98,46 @@ function step(direction) {
     stepUp()
     }
 }
+function blockStep(direction) {
+    prevDirection == direction ? console.log(prevDirection, direction) : console.log(prevDirection, direction)
+    if (direction == 'left') { 
+        blockStepLeft()
+    }
+    else if (direction == 'right') { 
+        blockStepRight()
+    }
+    else if (direction == 'down') {
+        blockStepDown()
+    }
+    else if (direction == 'up') {
+        blockStepUp()
+    }
+    prevDirection = direction
+}
+
+
+
+function makeChane(direction) {
+    snake.style.left == block.style.left && snake.style.top == block.style.top ?  (blockStep(direction), block.connected = true)  : null    
+    block.connected == true ? blockStep(direction) : null
+}
+
+
+
 function move(direction) {
     clearInterval(stepInterval)
     stepInterval = setInterval(() => {
+        makeChane(direction)
         step(direction)
     }, 500)
 }
+
+
+
+
+
+
+
 
 function getRandomNumber() {
     min = Math.ceil(0);
